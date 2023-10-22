@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+        canvas {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <audio id="bounceSound">
+        <source src="bounce.wav" type="audio/wav">
+        Your browser does not support the audio element.
+    </audio>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const bounceSound = document.getElementById('bounceSound');
+
+        let x = 100; 
+        let y = 100; 
+        let speed = 1; 
+        let directionX = 1; 
+        let directionY = 1; 
+
+        function playBounceSound() {
+            bounceSound.currentTime = 0;
+            bounceSound.play();
+        }
+
+        function moveSquare() {
+            ctx.strokeStyle = 'blue';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+
+            x += speed * directionX;
+            y += speed * directionY;
+
+            if (x <= 0 || x >= canvas.width - 2) {
+                directionX = Math.random() < 0.5 ? 1 : -1;
+                speed += 0.05;
+                x = x <= 0 ? 2 : canvas.width - 4;
+                playBounceSound();
+            }
+
+            if (y <= 0 || y >= canvas.height - 2) {
+                directionY = Math.random() < 0.5 ? 1 : -1;
+                speed += 0.05;
+                y = y <= 0 ? 2 : canvas.height - 4;
+                playBounceSound();
+            }
+
+            ctx.lineTo(x, y);
+            ctx.stroke();
+            ctx.closePath();
+
+            requestAnimationFrame(moveSquare);
+        }
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        moveSquare();
+    </script>
+</body>
+</html>
